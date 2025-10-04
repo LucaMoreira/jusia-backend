@@ -23,25 +23,15 @@ services:
       - key: DB_ENGINE
         value: django.db.backends.postgresql
       - key: DB_NAME
-        fromDatabase:
-          name: jusia-db
-          property: database
+        sync: false
       - key: DB_USER
-        fromDatabase:
-          name: jusia-db
-          property: user
+        sync: false
       - key: DB_PASSWORD
-        fromDatabase:
-          name: jusia-db
-          property: password
+        sync: false
       - key: DB_HOST
-        fromDatabase:
-          name: jusia-db
-          property: host
+        sync: false
       - key: DB_PORT
-        fromDatabase:
-          name: jusia-db
-          property: port
+        sync: false
       - key: STRIPE_PRIVATE_KEY
         sync: false
       - key: EMAIL_HOST_USER
@@ -55,13 +45,4 @@ services:
       - key: GEMINI_MODEL
         value: gemini-1.5-flash
 
-  # Database PostgreSQL
-  - type: pserv
-    name: jusia-db
-    plan: starter
-    region: oregon
-    disk:
-      name: jusia-db-disk
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
 
