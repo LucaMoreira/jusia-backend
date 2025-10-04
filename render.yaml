@@ -58,10 +58,8 @@ services:
   # Database PostgreSQL
   - type: pserv
     name: jusia-db
-    env: postgresql
     plan: starter
     region: oregon
-    ipAllowList: []
     disk:
       name: jusia-db-disk
       mountPath: /var/lib/postgresql/data
