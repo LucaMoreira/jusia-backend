@@ -78,3 +78,4 @@ class ChatResponseSerializer(serializers.Serializer):
     suggestions = serializers.ListField(child=serializers.CharField(), required=False)
 
 
+

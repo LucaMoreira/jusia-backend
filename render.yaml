@@ -62,8 +62,8 @@ services:
     plan: starter
     region: oregon
     ipAllowList: []
-    maxConnections: 100
     disk:
       name: jusia-db-disk
       mountPath: /var/lib/postgresql/data
       sizeGB: 1
+

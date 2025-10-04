@@ -220,3 +220,4 @@ class GeminiService:
         return len(text) // 4
 
 
+
