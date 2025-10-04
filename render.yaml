@@ -1,0 +1,69 @@
+services:
+  # Backend Django API
+  - type: web
+    name: jusia-backend
+    env: python
+    plan: starter
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: |
+      gunicorn cloudpharma_backend.wsgi:application
+    healthCheckPath: /admin/
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: BACKEND_HOST
+        value: 0.0.0.0
+      - key: FRONTEND_URL
+        value: https://jusia-frontend.onrender.com
+      - key: DB_ENGINE
+        value: django.db.backends.postgresql
+      - key: DB_NAME
+        fromDatabase:
+          name: jusia-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: jusia-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: jusia-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: jusia-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: jusia-db
+          property: port
+      - key: STRIPE_PRIVATE_KEY
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: DATAJUD_API_KEY
+        value: cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==
+      - key: DATAJUD_BASE_URL
+        value: https://api-publica.datajud.cnj.jus.br
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+
+  # Database PostgreSQL
+  - type: pserv
+    name: jusia-db
+    env: postgresql
+    plan: starter
+    region: oregon
+    ipAllowList: []
+    maxConnections: 100
+    disk:
+      name: jusia-db-disk
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1

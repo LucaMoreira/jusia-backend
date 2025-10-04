@@ -77,3 +77,4 @@ class ChatResponseSerializer(serializers.Serializer):
     context_updated = serializers.BooleanField(default=False)
     suggestions = serializers.ListField(child=serializers.CharField(), required=False)
 
+

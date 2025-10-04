@@ -219,3 +219,4 @@ class GeminiService:
         # Aproximação: 1 token ≈ 4 caracteres para português
         return len(text) // 4
 
+

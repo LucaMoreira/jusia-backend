@@ -100,3 +100,4 @@ class SimpleProcessTests(APITestCase):
         self.assertTrue(response.data['success'])
         self.assertEqual(len(response.data['data']), 0)
 
+

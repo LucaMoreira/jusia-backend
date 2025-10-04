@@ -7,3 +7,4 @@ class ProcessesConfig(AppConfig):
     verbose_name = 'Processos Judiciais'
 
 
+

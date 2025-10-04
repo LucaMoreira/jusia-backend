@@ -15,3 +15,4 @@ urlpatterns = [
     path('analyze/process/<int:process_id>/', views.analyze_process, name='analyze_process'),
 ]
 
+
