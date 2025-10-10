@@ -57,7 +57,7 @@ pip install -r requirements.txt
 
 4. **Configure as variáveis de ambiente**
 ```bash
-cp .env.example .env
+cp env.example .env
 # Edite o arquivo .env com suas configurações
 ```
 
@@ -151,6 +151,10 @@ EMAIL_USE_TLS=True
 # Google Gemini AI
 GEMINI_API_KEY=your-gemini-api-key
 GEMINI_MODEL=gemini-1.5-flash
+
+# DataJud API (CNJ)
+DATAJUD_API_KEY=your-datajud-api-key
+DATAJUD_BASE_URL=https://api-publica.datajud.cnj.jus.br
 ```
 
 ## 🔍 Health Checks

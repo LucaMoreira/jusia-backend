@@ -57,4 +57,37 @@ print('\\n🎉 Todas as dependências estão instaladas corretamente!')
 echo "⚙️  Testando configurações Django..."
 python manage.py check --deploy
 
+# Verificar configurações críticas
+echo "🔧 Verificando configurações críticas..."
+python -c "
+from django.conf import settings
+import os
+
+# Verificar configurações essenciais
+configs = [
+    'SECRET_KEY',
+    'DATABASES',
+    'STRIPE_PRIVATE_KEY',
+    'EMAIL_HOST_USER',
+    'FRONTEND_URL',
+    'GEMINI_API_KEY',
+    'DATAJUD_API_KEY',
+    'DATAJUD_BASE_URL'
+]
+
+for config in configs:
+    try:
+        value = getattr(settings, config)
+        if config == 'SECRET_KEY' and value == 'django-insecure-your-secret-key-here':
+            print(f'⚠️  {config}: Valor padrão (configure em produção)')
+        elif config == 'GEMINI_API_KEY' and not value:
+            print(f'⚠️  {config}: Não configurado (opcional)')
+        else:
+            print(f'✅ {config}: Configurado')
+    except AttributeError:
+        print(f'❌ {config}: Não encontrado')
+
+print('\\n🎉 Verificação de configurações concluída!')
+"
+
 echo "✅ Verificação concluída!"
