@@ -21,6 +21,7 @@ from subscriptions.urls import urlpatterns as subscription_urls
 from notifications.urls import urlpatterns as notification_urls
 from processes.urls import urlpatterns as process_urls
 from chat.urls import urlpatterns as chat_urls
+from health.urls import urlpatterns as health_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('notifications/', include(notification_urls)),
     path('processes/', include(process_urls)),
     path('chat/', include(chat_urls)),
+    path('health/', include(health_urls)),
 ]

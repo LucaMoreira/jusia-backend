@@ -8,6 +8,8 @@ django-stubs==5.2.2
 django-stubs-ext==5.2.2
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
+google-generativeai==0.8.3
+gunicorn==23.0.0
 idna==3.10
 psycopg2-binary==2.9.10
 PyJWT==2.10.1
@@ -17,3 +19,4 @@ stripe==12.5.0
 types-PyYAML==6.0.12.20250822
 typing_extensions==4.15.0
 urllib3==2.5.0
+whitenoise==6.8.2

@@ -28,9 +28,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-your-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG', default=True)
+DEBUG = env('DEBUG', default=False)
 
-ALLOWED_HOSTS = [ env('BACKEND_HOST', default='127.0.0.1'), '127.0.0.1', '*' ]
+# Cloud Run configuration
+PORT = env('PORT', default='8080')
+
+ALLOWED_HOSTS = [
+    env('BACKEND_HOST', default='127.0.0.1'), 
+    '127.0.0.1', 
+    '*',
+    '.run.app',  # Google Cloud Run domain
+    '.googleusercontent.com'  # Google Cloud Run internal domain
+]
 FRONTEND_URL = env('FRONTEND_URL', default='http://127.0.0.1:3000')
 CORS_ALLOWED_ORIGINS = [ FRONTEND_URL, 'http://127.0.0.1:3000' ]
 CORS_ORIGIN_ALLOW_ALL = True
@@ -81,11 +90,13 @@ INSTALLED_APPS = [
     'notifications',
     'processes',
     'chat',
+    'health',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -174,6 +185,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Static files finders
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+# Additional static files directories (if needed)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -189,10 +212,56 @@ STRIPE_PRIVATE_KEY = env('STRIPE_PRIVATE_KEY', default='sk_test_your_stripe_key_
 # Email
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='your-email@example.com')
 
-# DataJud API
-DATAJUD_API_KEY = env('DATAJUD_API_KEY', default='cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==')
-DATAJUD_BASE_URL = env('DATAJUD_BASE_URL', default='https://api-publica.datajud.cnj.jus.br')
-
-# Gemini AI API
+# Google Gemini AI
 GEMINI_API_KEY = env('GEMINI_API_KEY', default='')
 GEMINI_MODEL = env('GEMINI_MODEL', default='gemini-1.5-flash')
+
+# Production settings for Cloud Run
+if not DEBUG:
+    # Security settings
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # HTTPS settings (Cloud Run handles SSL termination)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_TZ = True
+    
+    # Static files with WhiteNoise for production
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    # WhiteNoise configuration
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = True
+    
+    # Logging configuration
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+                'style': '{',
+            },
+        },
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'INFO',
+                'propagate': False,
+            },
+        },
+    }
