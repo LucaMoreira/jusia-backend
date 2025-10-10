@@ -220,6 +220,23 @@ GEMINI_MODEL = env('GEMINI_MODEL', default='gemini-1.5-flash')
 DATAJUD_API_KEY = env('DATAJUD_API_KEY', default='cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==')
 DATAJUD_BASE_URL = env('DATAJUD_BASE_URL', default='https://api-publica.datajud.cnj.jus.br')
 
+# CSRF and Security settings for Cloud Run
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.run.app',
+    'https://*.googleusercontent.com',
+    'https://jusia-backend-394670659856.southamerica-east1.run.app',
+    FRONTEND_URL,
+]
+
+# Add additional trusted origins from environment
+ADDITIONAL_TRUSTED_ORIGINS = env('ADDITIONAL_TRUSTED_ORIGINS', default='').split(',')
+CSRF_TRUSTED_ORIGINS.extend([origin.strip() for origin in ADDITIONAL_TRUSTED_ORIGINS if origin.strip()])
+
+# Additional CSRF settings
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+
 # Production settings for Cloud Run
 if not DEBUG:
     # Security settings
@@ -233,6 +250,11 @@ if not DEBUG:
     # HTTPS settings (Cloud Run handles SSL termination)
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     USE_TZ = True
+    
+    # Session security for production
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
     
     # Static files with WhiteNoise for production
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

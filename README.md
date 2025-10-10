@@ -155,6 +155,9 @@ GEMINI_MODEL=gemini-1.5-flash
 # DataJud API (CNJ)
 DATAJUD_API_KEY=your-datajud-api-key
 DATAJUD_BASE_URL=https://api-publica.datajud.cnj.jus.br
+
+# Additional trusted origins for CSRF (comma-separated)
+ADDITIONAL_TRUSTED_ORIGINS=https://your-custom-domain.com,https://another-domain.com
 ```
 
 ## 🔍 Health Checks
@@ -227,6 +230,9 @@ python manage.py createsuperuser
 
 # Verificar dependências
 ./check_dependencies.sh
+
+# Testar configurações de CSRF
+./test_csrf.sh
 ```
 
 ## 📁 Arquivos Estáticos
@@ -263,6 +269,11 @@ O sistema está configurado para servir arquivos estáticos corretamente:
    - Execute `python manage.py collectstatic`
    - Verifique se WhiteNoise está no middleware
    - Confirme se STATIC_ROOT está configurado
+
+5. **Erro CSRF no Admin**
+   - Verifique se CSRF_TRUSTED_ORIGINS está configurado
+   - Adicione sua URL do Cloud Run às origens confiáveis
+   - Confirme se DEBUG=False em produção
 
 ## 📞 Suporte
 
